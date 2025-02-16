@@ -2,9 +2,9 @@ import { createRouter, createWebHistory } from 'vue-router';
 
 const routes = [
     {
-        path: '/scheduleManagement',
-        name: 'ScheduleManagement',
-        component: 'ScheduleManagement.vue'
+        path: '/schedule',
+        name: 'Schedule',
+        component: () => import('@/components/ScheduleManagement.vue')
     }
 ];
 

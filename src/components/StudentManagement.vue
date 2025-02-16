@@ -1,7 +1,15 @@
 <template>
-    <div>
-    <el-button @click="goToPage2">跳转到schedule</el-button>
-  </div>
+    <div class="student-management">
+        <!-- 新增跳转按钮 -->
+        <div class="top-right">
+            <el-button type="primary" @click="goToSchedule" class="schedule-button">
+                <el-icon>
+                    <Calendar />
+                </el-icon>
+                课程排期
+            </el-button>
+        </div>
+    </div>
     <div class="student-management">
         <!-- 搜索和操作区域 -->
         <div class="operation-area">
@@ -82,13 +90,14 @@ import { ElMessage, ElMessageBox } from "element-plus";
 import axios from "axios";
 import Qs from 'qs'
 
-import { useRouter } from 'vue-router';
+import { useRouter } from 'vue-router'
+import { Calendar } from '@element-plus/icons-vue'
 
-const router = useRouter();
+const router = useRouter()
 
-const goToPage2 = () => {
-  router.push('/ScheduleManagement.vue');
-};
+const goToSchedule = () => {
+  router.push({ name: 'Schedule' }) // 确保路由配置了name为'Schedule'的路由
+}
 
 // 状态映射
 const statusMap = {
@@ -214,5 +223,26 @@ const showCourses = async (studentName) => {
 
 .operation-area {
     margin-bottom: 20px;
+}
+
+.top-right {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 1000; /* 确保按钮在表格上方 */
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+  .top-right {
+    position: static;
+    text-align: right;
+    margin-bottom: 15px;
+  }
+  
+  .schedule-button {
+    width: 100%;
+    margin-top: 10px;
+  }
 }
 </style>
