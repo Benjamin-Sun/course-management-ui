@@ -144,7 +144,7 @@ const submitSchedule = async () => {
 
 const loadCourses = async () => {
     try {
-        const { data } = await axios.get('/api/courseManage/schedule/getCourseByTime')
+        const { data } = await axios.get('/api/courseManage/course/getAllCourse')
         allCourses.value = data.map(c => ({
             ...c,
             courseTime: dayjs(c.courseTime).format('YYYY-MM-DDTHH:mm:ss')

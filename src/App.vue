@@ -1,11 +1,13 @@
 <template>
   <div id="app">
-    <StudentManagement />
+    <!-- <StudentManagement /> -->
+     <ScheduleManagement />
   </div>
 </template>
 
 <script setup>
-import StudentManagement from './components/StudentManagement.vue'
+// import StudentManagement from './components/StudentManagement.vue'
+import ScheduleManagement from './components/ScheduleManagement.vue';
 </script>
 
 <style>
