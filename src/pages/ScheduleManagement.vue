@@ -41,7 +41,7 @@
             >
               <el-tag type="info">
                 {{ formatTime(course.courseTime) }}
-                ￥{{ course.courseFee }}
+                ￥{{ course.studentName }}
               </el-tag>
               <div v-if="course.courseNote" class="course-note">
                 {{ course.courseNote }}
@@ -90,7 +90,7 @@ const getDailyCourses = (date) => {
 
 const loadCourses = async () => {
   try {
-    allCourses.value = await api.getAllCourse();
+    allCourses.value = await api.getAllStudentCourseAndTime();
   } catch (error) {
     ElMessage.error("加载课程失败");
   }
