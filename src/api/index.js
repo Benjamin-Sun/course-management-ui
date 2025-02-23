@@ -10,7 +10,7 @@ export default {
   },
 
   addCourseNote(data) {
-    return axios.post(`${API_URL}/courseManage/schedule/addCourseNote`, data);
+    return axios.post(`${API_URL}/courseManage/course/addCourseNote`, data);
   },
   updateCourseStatus() {
     return axios.post(
@@ -20,26 +20,26 @@ export default {
   },
 
   getAllStudentCourseAndTime(date) {
-    let data = [
-      {
-        studentName: "test2",
-        courseId: 36,
-        courseStatus: 0,
-        scheduleTime: "2025-02-22T15:00:00",
-      },
-      {
-        studentName: "test2",
-        courseId: 32,
-        courseStatus: 0,
-        scheduleTime: "2025-02-24T22:19:26",
-      },
-      {
-        studentName: "test2",
-        courseId: 322,
-        courseStatus: 0,
-        scheduleTime: "2025-02-24T12:19:26",
-      },
-    ];
+  //   let data = [
+  //     {
+  //       studentName: "test2",
+  //       courseId: 36,
+  //       courseStatus: 0,
+  //       scheduleTime: "2025-02-22T15:00:00",
+  //     },
+  //     {
+  //       studentName: "test2",
+  //       courseId: 32,
+  //       courseStatus: 0,
+  //       scheduleTime: "2025-02-24T22:19:26",
+  //     },
+  //     {
+  //       studentName: "test2",
+  //       courseId: 322,
+  //       courseStatus: 0,
+  //       scheduleTime: "2025-02-24T12:19:26",
+  //     },
+  //   ];
     //
     /**
      * 按日期转换为 Map
@@ -48,28 +48,28 @@ export default {
           "2025-02-24": [ ]
         }
      */
-    return data.reduce((acc, item) => {
-      const date = dayjs(item.scheduleTime).format("YYYY-MM-DD")
-      if (!acc[date]) {
-        acc[date] = [];
-      }
-      acc[date].push(item);
-      return acc;
-    }, {});
+    // return data.reduce((acc, item) => {
+    //   const date = dayjs(item.scheduleTime).format("YYYY-MM-DD")
+    //   if (!acc[date]) {
+    //     acc[date] = [];
+    //   }
+    //   acc[date].push(item);
+    //   return acc;
+    // }, {});
 
-    // return axios
-    //   .get(
-    //     `${API_URL}/courseManage/schedule/getAllStudentCourseAndTimeByMonth?date=${date}`
-    //   )
-    //   .then(({ data }) => {
-    //     return data.reduce((acc, item) => {
-    //       const date = dayjs(item.scheduleTime).format("YYYY-MM-DD");
-    //       if (!acc[date]) {
-    //         acc[date] = [];
-    //       }
-    //       acc[date].push(item);
-    //       return acc;
-    //     }, {});
-    //   });
+    return axios
+      .get(
+        `${API_URL}/courseManage/schedule/getAllStudentCourseAndTimeByMonth?date=${date}`
+      )
+      .then(({ data }) => {
+        return data.reduce((acc, item) => {
+          const date = dayjs(item.scheduleTime).format("YYYY-MM-DD");
+          if (!acc[date]) {
+            acc[date] = [];
+          }
+          acc[date].push(item);
+          return acc;
+        }, {});
+      });
   },
 };

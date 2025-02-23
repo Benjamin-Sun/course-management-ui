@@ -1,10 +1,10 @@
 <template>
-  <el-dialog v-model="modelValue" title="XXXX" width="500px" >
+  <el-dialog v-model="modelValue" title="课程记录" width="500px" >
     <el-form :model="form" label-width="100px">
       <el-form-item label="姓名" required>
         <el-input disabled v-model="form.studentName" />
       </el-form-item> 
-      <el-form-item label="Note:" required>
+      <el-form-item label="上课情况:" required>
         <el-input type="textarea" :row="4" v-model="form.note" />
       </el-form-item> 
     </el-form>
@@ -30,7 +30,7 @@ const modelValue = ref(false)
 const emits = defineEmits([ "submit", 'close']);
 
 const form = ref({}); 
-const show = data => {
+const show = (data) => {
   modelValue.value = true; 
   form.value = {
     ...data,
@@ -40,12 +40,17 @@ const show = data => {
 } 
 
 const submit = async () => {
-  await api.addCourseNote({
-    studentName: form.studentName, 
-    note: form.note, 
-  })
-  ElMessage.success("添加成功");
-  emits('submit')
+  try {
+    await api.addCourseNote({
+      courseNote: form.value.note,
+      courseId: form.value.courseId
+    });
+    ElMessage.success("添加成功");
+    emits('submit');
+  } catch (error) {
+    ElMessage.error("添加失败");
+    console.error('添加上课记录失败:', error);
+  }
 }
 
 defineExpose({
