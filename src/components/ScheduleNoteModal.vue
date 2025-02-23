@@ -1,13 +1,16 @@
 <template>
   <el-dialog v-model="modelValue" title="XXXX" width="500px" >
     <el-form :model="form" label-width="100px">
-      <el-form-item label="学生姓名" required>
-        <el-input v-model="form.studentName" />
+      <el-form-item label="姓名" required>
+        <el-input disabled v-model="form.studentName" />
+      </el-form-item> 
+      <el-form-item label="Note:" required>
+        <el-input type="textarea" :row="4" v-model="form.note" />
       </el-form-item> 
     </el-form>
 
     <template #footer>
-      <el-button @click="modelValue = false">取消</el-button>
+      <el-button @click="modelValue = false">取消</el-button> 
       <el-button type="primary" @click="submit()">添加记录</el-button>
     </template>
   </el-dialog>
@@ -26,19 +29,20 @@ const props = defineProps({
 const modelValue = ref(false)
 const emits = defineEmits([ "submit", 'close']);
 
-const form = reactive({
-  studentName: "", 
-}); 
+const form = ref({}); 
 const show = data => {
+  modelValue.value = true; 
+  form.value = {
+    ...data,
+    note: ''
+  }
   console.log(data); 
-  modelValue.value = true;
-  // ... 根据data写入form
-
 } 
 
 const submit = async () => {
   await api.addCourseNote({
     studentName: form.studentName, 
+    note: form.note, 
   })
   ElMessage.success("添加成功");
   emits('submit')

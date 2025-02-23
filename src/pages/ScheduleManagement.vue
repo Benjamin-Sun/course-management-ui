@@ -1,7 +1,7 @@
 <template>
   <div class="course-schedule">
     <!-- 主日历区域 -->
-    <el-calendar class="course-calendar" v-model="value" ref="calendar">
+    <el-calendar class="course-calendar" v-model="currentDate" ref="calendar" @change="">
       <template #header="{ date }">
         <span> {{ date }}</span> 
         <div class="header-button-right">
@@ -30,18 +30,18 @@
       <template #date-cell="{ data }">
         <div :class="['calendar-day', data.type]" class="">
           <div class="day-number">
-            {{ data.day.split("-").slice(2).join("-") }}
+            {{ data.day.split("-").slice(2).join("-") }} 
           </div>
-          <div class="courses">
+          <div class="courses" v-if="allCourses[data.day]">
             <div
-              v-for="(course, index) in getDailyCourses(data.day)"
+              v-for="(course, index) in allCourses[data.day]"
               :key="index"
               class="course-item"
               @click="openScheduleNoteModal(course)"
             >
               <el-tag type="info">
-                {{ formatTime(course.courseTime) }}
-                ￥{{ course.studentName }}
+                {{ formatTime(course.scheduleTime) }}
+                学生：{{ course.studentName }}
               </el-tag>
               <div v-if="course.courseNote" class="course-note">
                 {{ course.courseNote }}
@@ -53,13 +53,13 @@
     </el-calendar>
  
     <!-- 排课对话框 -->
-    <ScheduleModal :startTime="value" v-model="showAddScheduleModal" @submit-success="loadCourses()" />
+    <ScheduleModal :startTime="currentDate" v-model="showAddScheduleModal" @submit-success="loadCourses()" />
     <ScheduleNoteModal ref="scheduleNoteModal" @submit="loadCourses()" /> 
   </div>
 </template>
 
 <script setup>
-import { ref, reactive } from "vue";
+import { ref, reactive, watch } from "vue";
 import { ElMessage } from "element-plus";
 import axios from "axios";
 import dayjs from "dayjs";
@@ -69,37 +69,38 @@ import ScheduleNoteModal from "@/components/ScheduleNoteModal.vue";
 import { useRouter } from "vue-router";
 
 const router = useRouter();
-const allCourses = ref([]);
+const allCourses = ref({});
 const showAddScheduleModal = ref(false);
-const value = ref(new Date());
+const currentDate = ref(new Date());
 const calendar = ref(null);
-const selectDate = (val) => {
-  if (!calendar.value) return;
-  calendar.value.selectDate(val);
-};
+
  
-// 时间格式化
-const formatTime = (timeStr) => dayjs(timeStr).format("HH:mm") || ''; 
-
-// 获取当天的课程
-const getDailyCourses = (date) => {
-  return allCourses.value.filter((course) =>
-    dayjs(course.courseTime).isSame(date, "day")
-  );
-}; 
-
-const loadCourses = async () => {
-  try {
-    allCourses.value = await api.getAllStudentCourseAndTime();
-  } catch (error) {
-    ElMessage.error("加载课程失败");
-  }
-};
-
 const scheduleNoteModal = ref(null) 
 const openScheduleNoteModal = (course) => {
   scheduleNoteModal.value.show(course)
 };
+
+// 时间格式化
+const formatTime = (timeStr) => dayjs(timeStr).format("HH:mm") || ''; 
+
+const loadCourses = async () => {
+  try {
+    const date = dayjs(currentDate.value).format("YYYY-MM") || '';
+    allCourses.value = await api.getAllStudentCourseAndTime(date);
+    console.log({...allCourses.value})
+  } catch (error) {
+    console.error(error);
+    ElMessage.error("加载课程失败");
+  }
+};
+
+const selectDate = (val) => {
+  if (!calendar.value) return;
+  calendar.value.selectDate(val);
+  loadCourses()
+};
+
+
 loadCourses();
 </script>
 

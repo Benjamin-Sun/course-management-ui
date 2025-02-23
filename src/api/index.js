@@ -1,9 +1,8 @@
 import axios from "axios";
 import dayjs from "dayjs";
 
-
-const API_URL = import.meta.env === 'development' ? '/api' : 'http://127.0.0.1:9800'
-
+const API_URL =
+  import.meta.env === "development" ? "/api" : "http://127.0.0.1:9800";
 
 export default {
   addSchedule(data) {
@@ -13,37 +12,64 @@ export default {
   addCourseNote(data) {
     return axios.post(`${API_URL}/courseManage/schedule/addCourseNote`, data);
   },
-  updateCourseStatus(){
-    return axios.post(`${API_URL}/courseManage/schedule/updateCourseStatus`, data);
+  updateCourseStatus() {
+    return axios.post(
+      `${API_URL}/courseManage/schedule/updateCourseStatus`,
+      data
+    );
   },
 
-  getAllCourse() {
-    // return [
-    //     {
-    //         "courseId": 1,
-    //         "courseNote": "",
-    //         "courseFee": 300,
-    //         "courseStatus": 0,
-    //         "scheduleTime":"2025-03-07 10:00:00"
-    //     },
-    //     {
-    //         "courseId": 2,
-    //         "courseNote": "",
-    //         "courseFee": 300,
-    //         "courseStatus": 0,
-    //         "scheduleTime":"2025-03-08 10:00:00"
-    //     }
-    // ].map((c) => ({
-    //     ...c,
-    //     courseTime: dayjs(c.courseTime).format("YYYY-MM-DDTHH:mm:ss"),
-    // }));
-    return axios
-      .get(`${API_URL}/courseManage/schedule/getAllStudentCourseAndTimeByMonth`)
-      .then(({ data }) => {
-        return data.map((c) => ({
-          ...c,
-          courseTime: dayjs(c.courseTime).format("YYYY-MM-DDTHH:mm:ss"),
-        }));
-      });
+  getAllStudentCourseAndTime(date) {
+    let data = [
+      {
+        studentName: "test2",
+        courseId: 36,
+        courseStatus: 0,
+        scheduleTime: "2025-02-22T15:00:00",
+      },
+      {
+        studentName: "test2",
+        courseId: 32,
+        courseStatus: 0,
+        scheduleTime: "2025-02-24T22:19:26",
+      },
+      {
+        studentName: "test2",
+        courseId: 322,
+        courseStatus: 0,
+        scheduleTime: "2025-02-24T12:19:26",
+      },
+    ];
+    //
+    /**
+     * 按日期转换为 Map
+     *  {
+          "2025-02-22": [ ],
+          "2025-02-24": [ ]
+        }
+     */
+    return data.reduce((acc, item) => {
+      const date = dayjs(item.scheduleTime).format("YYYY-MM-DD")
+      if (!acc[date]) {
+        acc[date] = [];
+      }
+      acc[date].push(item);
+      return acc;
+    }, {});
+
+    // return axios
+    //   .get(
+    //     `${API_URL}/courseManage/schedule/getAllStudentCourseAndTimeByMonth?date=${date}`
+    //   )
+    //   .then(({ data }) => {
+    //     return data.reduce((acc, item) => {
+    //       const date = dayjs(item.scheduleTime).format("YYYY-MM-DD");
+    //       if (!acc[date]) {
+    //         acc[date] = [];
+    //       }
+    //       acc[date].push(item);
+    //       return acc;
+    //     }, {});
+    //   });
   },
 };
