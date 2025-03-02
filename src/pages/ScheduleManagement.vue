@@ -6,6 +6,9 @@
         <span> {{ date }}</span> 
         <div class="header-button-right">
           <el-button-group style="margin-right: 8px;">
+            <el-button type="primary" size="medium" @click="calculateTotalFee">
+              计算当日总课时费
+            </el-button>
             <el-button type="primary" size="medium" @click="showAddScheduleModal = true">
               添加课程
             </el-button>
@@ -39,7 +42,7 @@
               class="course-item"
               @click="openScheduleNoteModal(course)"
             >
-              <el-tag type="info">
+              <el-tag :type="courseStatus(course)" >
                 {{ course.studentName }}
                  {{ formatTime(course.scheduleTime) }}
               </el-tag>
@@ -55,6 +58,7 @@
     <!-- 排课对话框 -->
     <ScheduleModal :startTime="currentDate" v-model="showAddScheduleModal" @submit-success="loadCourses()" />
     <ScheduleNoteModal ref="scheduleNoteModal" @submit="loadCourses()" /> 
+    <TotalFeeModal ref="totalFeeModal" />
   </div>
 </template>
 
@@ -66,6 +70,7 @@ import dayjs from "dayjs";
 import api from "@/api";
 import ScheduleModal from "@/components/ScheduleModal.vue";
 import ScheduleNoteModal from "@/components/ScheduleNoteModal.vue";
+import TotalFeeModal from "@/components/TotalFeeModal.vue";
 import { useRouter } from "vue-router";
 
 const router = useRouter();
@@ -74,10 +79,11 @@ const showAddScheduleModal = ref(false);
 const currentDate = ref(new Date());
 const calendar = ref(null);
 
- 
-const scheduleNoteModal = ref(null) 
+const scheduleNoteModal = ref(null);
+const totalFeeModal = ref(null);
+
 const openScheduleNoteModal = (course) => {
-  scheduleNoteModal.value.show(course)
+  scheduleNoteModal.value.show(course);
 };
 
 // 时间格式化
@@ -87,7 +93,7 @@ const loadCourses = async () => {
   try {
     const date = dayjs(currentDate.value).format("YYYY-MM") || '';
     allCourses.value = await api.getAllStudentCourseAndTime(date);
-    console.log({...allCourses.value})
+    console.log({...allCourses.value});
   } catch (error) {
     console.error(error);
     ElMessage.error("加载课程失败");
@@ -97,9 +103,35 @@ const loadCourses = async () => {
 const selectDate = (val) => {
   if (!calendar.value) return;
   calendar.value.selectDate(val);
-  loadCourses()
+  loadCourses();
 };
 
+const courseStatus = (course) => {
+  let tagType = "";
+  switch (course.courseStatus) {
+    case 0:
+      tagType = "info";
+      break;
+    case 1:
+      tagType = "success";
+      break;
+    case -1:
+      tagType = "warning";
+      break;
+  }
+  return tagType;
+};
+
+const calculateTotalFee = async () => {
+  try {
+    const response = await api.getTotalFeeForToday();
+    console.log(response);
+    totalFeeModal.value.show(response.data);
+  } catch (error) {
+    ElMessage.error("获取总课时费失败");
+    console.error("获取总课时费失败:", error);
+  }
+};
 
 loadCourses();
 </script>

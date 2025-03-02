@@ -19,11 +19,19 @@ export default {
     );
   },
 
-  updateCourseStatus() {
+  updateCourseStatus(data) {
     return axios.post(
-      `${API_URL}/courseManage/schedule/updateCourseStatus`,
-      data
-    );
+      `${API_URL}/courseManage/course/updateCourseStatus`, data);
+  },
+
+  reScheduleCourse(courseId, newTime) {
+    return axios.get(
+      `${API_URL}/courseManage/course/rescheduleCourse?courseId=${courseId}&newTime=${newTime}`);
+  },
+
+  getTotalFeeForToday() {
+    return axios.get(
+      `${API_URL}/courseManage/course/getTotalFeeForToday`);
   },
 
   getAllStudentCourseAndTime(date) {
