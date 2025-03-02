@@ -22,22 +22,29 @@ import { ElMessage } from "element-plus";
 import dayjs from "dayjs";
 import api from "@/api";
 
-const props = defineProps({
-
-});
+const props = defineProps({});
 
 const modelValue = ref(false)
 const emits = defineEmits([ "submit", 'close']);
 
 const form = ref({}); 
-const show = (data) => {
+const show = async (data) => {
   modelValue.value = true; 
   form.value = {
     ...data,
-    note: ''
-  }
+    note: '',
+  };
   console.log(data); 
-} 
+
+  try {
+    const response = await api.getCourseById(data.courseId);
+    form.value.note = response.data.courseNote;
+    console.log(response);
+  } catch (error) {
+    ElMessage.error("加载课程记录失败");
+    console.error("加载课程记录失败:", error);
+  }
+};
 
 const submit = async () => {
   try {
@@ -51,10 +58,10 @@ const submit = async () => {
     ElMessage.error("添加失败");
     console.error('添加上课记录失败:', error);
   }
-}
+};
 
 defineExpose({
-  show
+  show,
 });
 </script>
 

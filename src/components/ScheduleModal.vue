@@ -133,16 +133,21 @@ const submitSchedule = async () => {
         courseStatus: 0,
       }));
 
-    await api.addSchedule({
+    const response = await api.addSchedule({
       studentName: form.studentName,
       scheduleTimeList,
       courseList,
     });
-    ElMessage.success("排课成功");
-    emits("submit-success");
-    close()
+    if (response.data == "scheduling successful") {
+      ElMessage.success("排课成功");
+      emits("submit-success");
+      close();
+    } else {
+      ElMessage.error(response.data);
+      console.error(error);
+    }
   } catch (error) {
-    ElMessage.error("排课失败");
+    // ElMessage.error("排课失败");
     console.error(error);
   }
 };

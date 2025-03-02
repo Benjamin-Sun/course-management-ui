@@ -12,6 +12,13 @@ export default {
   addCourseNote(data) {
     return axios.post(`${API_URL}/courseManage/course/addCourseNote`, data);
   },
+
+  getCourseById(courseId) {
+    return axios.get(
+      `${API_URL}/courseManage/course/getCourseById?courseId=${courseId}`
+    );
+  },
+
   updateCourseStatus() {
     return axios.post(
       `${API_URL}/courseManage/schedule/updateCourseStatus`,

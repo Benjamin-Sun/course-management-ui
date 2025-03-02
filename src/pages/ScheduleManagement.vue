@@ -40,8 +40,8 @@
               @click="openScheduleNoteModal(course)"
             >
               <el-tag type="info">
-                {{ formatTime(course.scheduleTime) }}
-                学生：{{ course.studentName }}
+                {{ course.studentName }}
+                 {{ formatTime(course.scheduleTime) }}
               </el-tag>
               <div v-if="course.courseNote" class="course-note">
                 {{ course.courseNote }}
