@@ -1,5 +1,5 @@
 <template>
-  <el-dialog v-model="showModal" title="当日总课时费" width="400px">
+  <el-dialog v-model="showModal" title="当日总课时费" append-to-body width="400px">
     <div>
       <p>总课时费: ￥{{ totalFee }}</p>
     </div>

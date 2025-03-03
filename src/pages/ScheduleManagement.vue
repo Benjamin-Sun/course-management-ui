@@ -5,7 +5,7 @@
       <template #header="{ date }">
         <span> {{ date }}</span> 
         <div class="header-button-right">
-          <el-button-group style="margin-right: 8px;">
+          <div style="display: inline-block;margin-right: 10px;">
             <el-button type="primary" size="medium" @click="calculateTotalFee">
               计算当日总课时费
             </el-button>
@@ -15,7 +15,7 @@
             <el-button type="primary" size="medium" @click="router.push({name: 'StudentManagement'})">
               学生管理
             </el-button>
-          </el-button-group>
+          </div> 
           <el-button-group class="calendar-control-button">
             <el-button size="medium" @click="selectDate('prev-month')">
               上月
@@ -40,7 +40,7 @@
               v-for="(course, index) in allCourses[data.day]"
               :key="index"
               class="course-item"
-              @click="openScheduleNoteModal(course)"
+              @click.stop="openScheduleNoteModal(course)"
             >
               <el-tag :type="courseStatus(course)" >
                 {{ course.studentName }}
@@ -110,7 +110,7 @@ const courseStatus = (course) => {
   let tagType = "";
   switch (course.courseStatus) {
     case 0:
-      tagType = "info";
+      tagType = "primary";
       break;
     case 1:
       tagType = "success";
@@ -140,12 +140,12 @@ loadCourses();
 .course-schedule {
   width: 100%; 
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   button {
     outline: none;
   }
   :deep(.course-calendar) { 
-    --el-calendar-cell-width: 15vh;
+    --el-calendar-cell-width: calc((100vh - 180px) / 6);
     .el-calendar-table__row {
       td.current {
         &.is-today {
@@ -197,7 +197,6 @@ loadCourses();
     }
     .header-button-right {
       button {
-        width: 80px;
       }
       .calendar-control-button {
         button {

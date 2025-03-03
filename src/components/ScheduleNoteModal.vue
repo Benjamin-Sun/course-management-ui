@@ -1,5 +1,5 @@
 <template>
-  <el-dialog v-model="modelValue" title="课程记录" width="600px">
+  <el-dialog v-model="modelValue" title="课程记录" width="600px" append-to-body>
     <el-form :model="form" label-width="100px">
       <el-form-item label="姓名" required>
         <el-input disabled v-model="form.studentName" />
@@ -14,15 +14,17 @@
       </el-form-item>
 
       <el-form-item label="上课情况" required>
-        <el-input type="textarea" :row="4" v-model="form.note" />
+        <el-input type="textarea" :rows="6" v-model="form.note" />
       </el-form-item>
     </el-form>
 
     <template #footer>
-      <el-button @click="modelValue = false">取消</el-button>
-      <el-button @click="openRescheduleModal(form.value)">调课</el-button>
-      <el-button type="primary" @click="updateStatus()">修改上课状态</el-button>
-      <el-button type="primary" @click="submit()">添加记录</el-button>
+      <div class="schedule-note-modal-footer">
+        <el-button @click="modelValue = false">取消</el-button>
+        <el-button type="info" @click="openRescheduleModal()">调课</el-button>
+        <el-button type="warning" @click="updateStatus()">修改上课状态</el-button>
+        <el-button type="primary" @click="submit()">添加记录</el-button>
+      </div>
     </template>
   </el-dialog>
 
@@ -90,8 +92,8 @@ const updateStatus = async () => {
 };
 
 const rescheduleModal = ref(null);
-const openRescheduleModal = (course) => {
-  rescheduleModal.value.show(course);
+const openRescheduleModal = () => {
+  rescheduleModal.value.show(form.value);
 };
 
 defineExpose({
@@ -99,4 +101,6 @@ defineExpose({
 });
 </script>
 
-<style scoped lang="scss"></style>
+
+<style lang="scss"> 
+</style>
