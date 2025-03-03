@@ -48,7 +48,8 @@ const rescheduleCourse = async () => {
   try {
     await api.reScheduleCourse({
       courseId: courseData.value.courseId,
-      newTime: (new Date(newTime.value)).getTime() // dayjs(newTime.value).format("YYYY-MM-DDTHH:mm:ss") // "YYYY-MM-DD HH:mm:ss"
+      // newTime: (new Date(newTime.value)).getTime() // dayjs(newTime.value).format("YYYY-MM-DDTHH:mm:ss") // "YYYY-MM-DD HH:mm:ss"
+      newTime: dayjs(newTime.value).format("YYYY-MM-DD HH:mm:ss")
     });
     ElMessage.success("调课成功");
     closeModal();
