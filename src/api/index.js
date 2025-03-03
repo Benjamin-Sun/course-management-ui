@@ -24,9 +24,8 @@ export default {
       `${API_URL}/courseManage/course/updateCourseStatus`, data);
   },
 
-  reScheduleCourse(courseId, newTime) {
-    return axios.get(
-      `${API_URL}/courseManage/course/rescheduleCourse?courseId=${courseId}&newTime=${newTime}`);
+  reScheduleCourse(params) {
+    return axios.get(`${API_URL}/courseManage/course/rescheduleCourse?courseId=${params.courseId}&newTime=${params.newTime}`);
   },
 
   getTotalFeeForToday() {

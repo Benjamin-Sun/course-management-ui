@@ -1,26 +1,34 @@
 <template>
-    <el-dialog v-model="showModal" title="调课" @close="closeModal">
-        <el-form>
-            <el-form-item label="新的上课时间">
-                <el-date-picker
-                    v-model="newTime"
-                    type="datetime"
-                    placeholder="选择日期和时间"
-                    format="YYYY-MM-DD HH:mm:ss"
-                ></el-date-picker>
-            </el-form-item>
-            <el-form-item>
-                <el-button type="primary" @click="rescheduleCourse">确定调课</el-button>
-            </el-form-item>
-        </el-form>
-    </el-dialog>
+  <el-dialog
+    v-model="showModal"
+    append-to-body
+    align-center
+    width="400px"
+    title="调课"
+    @close="closeModal"
+  >
+    <el-form>
+    <!-- 数据 {{ courseData }} -->
+      <el-form-item label="新的上课时间">
+        <el-date-picker
+          v-model="newTime"
+          type="datetime"
+          placeholder="选择日期和时间"
+          format="YYYY-MM-DD HH:mm:ss"
+        ></el-date-picker>
+      </el-form-item>
+      <el-form-item>
+        <el-button type="primary" @click="rescheduleCourse">确定调课</el-button>
+      </el-form-item>
+    </el-form>
+  </el-dialog>
 </template>
 
 <script setup>
 import { ref } from "vue";
 import { ElMessage } from "element-plus";
 import api from "@/api";
-
+import dayjs from 'dayjs'
 const showModal = ref(false);
 const newTime = ref(null);
 const courseData = ref(null);
@@ -29,6 +37,7 @@ const show = (data) => {
   showModal.value = true;
   courseData.value = data;
   console.log(data);
+  newTime.value = new Date(data.scheduleTime)
 };
 
 const closeModal = () => {
@@ -37,9 +46,9 @@ const closeModal = () => {
 
 const rescheduleCourse = async () => {
   try {
-    await api.rescheduleCourse({
+    await api.reScheduleCourse({
       courseId: courseData.value.courseId,
-      newTime: newTime.value,
+      newTime: (new Date(newTime.value)).getTime() // dayjs(newTime.value).format("YYYY-MM-DDTHH:mm:ss") // "YYYY-MM-DD HH:mm:ss"
     });
     ElMessage.success("调课成功");
     closeModal();
@@ -54,5 +63,4 @@ defineExpose({
 });
 </script>
 
-<style scoped lang="scss">
-</style>
+<style scoped lang="scss"></style>

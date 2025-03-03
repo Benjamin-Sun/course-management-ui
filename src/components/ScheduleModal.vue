@@ -3,6 +3,7 @@
     :model-value="modelValue"
     title="自动排课"
     width="500px"
+    append-to-body
     @closed="close()"
   >
     <el-form :model="form" label-width="100px">
