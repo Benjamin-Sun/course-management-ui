@@ -115,6 +115,7 @@ import { ref, reactive } from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
 import axios from "axios";
 import Qs from "qs";
+import api from "@/api";
 
 import { useRouter } from "vue-router";
 import { Calendar } from "@element-plus/icons-vue";
@@ -155,12 +156,7 @@ const formatDateTime = (datetime) => {
 // 搜索学生
 const searchStudent = async () => {
   try {
-    const response = await axios.get(
-      "/api/courseManage/student/getStudentByName",
-      {
-        params: { studentName: searchName.value },
-      }
-    );
+    const response = await api.getStudentByName(searchName.value);
     studentList.value = response.data ? [response.data] : [];
   } catch (error) {
     ElMessage.error("查询失败");
@@ -171,7 +167,7 @@ const searchStudent = async () => {
 // 提交添加
 const submitAdd = async () => {
   try {
-    await axios.post("/api/courseManage/student/addStudent", form);
+    await api.addStudent(form);
     ElMessage.success("添加成功");
     dialogVisible.value = false;
     Object.assign(form, {
@@ -197,12 +193,7 @@ const removeStudent = (name) => {
   })
     .then(async () => {
       try {
-        const { data } = await axios.get(
-          "/api/courseManage/student/removeStudent",
-          {
-            params: { studentName: name },
-          }
-        );
+        const { data } = await api.removeStudent(name);
         if (data > 0) {
           ElMessage.success("删除成功");
           searchStudent(); // 刷新列表
@@ -218,16 +209,17 @@ const removeStudent = (name) => {
 //查询记录
 const showCourses = async (studentName) => {
   try {
-    const { data } = await axios.post(
-      "/api/courseManage/schedule/getAllCourses",
-      Qs.stringify({ studentName }),
-      {
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-        },
-        timeout: 5000,
-      }
-    );
+    // const { data } = await axios.post(
+    //   ":9800/courseManage/schedule/getAllCourses",
+    //   Qs.stringify({ studentName }),
+    //   {
+    //     headers: {
+    //       "Content-Type": "application/x-www-form-urlencoded",
+    //     },
+    //     timeout: 5000,
+    //   }
+    // );
+    const { data } = await api.getAllCourses(Qs.stringify({ studentName }));
 
     if (data && data.length > 0) {
       courseList.value = data;

@@ -5,6 +5,27 @@ const API_URL =
   import.meta.env === "development" ? "/api" : "http://127.0.0.1:9800";
 
 export default {
+
+  getStudentByName(studentName) {
+    return axios.get(
+      `${API_URL}/courseManage/student/getStudentByName?studentName=${studentName}`
+    );
+  },
+
+  addStudent(data) {
+    return axios.post(`${API_URL}/courseManage/student/addStudent`, data);
+  },
+
+  removeStudent(studentName) {
+    return axios.get(
+      `${API_URL}/courseManage/student/removeStudent?studentName=${studentName}`
+    );
+  },
+
+  getAllCourses(data) {
+    return axios.post(`${API_URL}/courseManage/schedule/getAllCoursesByStudentName`, data);
+  },
+
   addSchedule(data) {
     return axios.post(`${API_URL}/courseManage/schedule/addSchedule`, data);
   },
