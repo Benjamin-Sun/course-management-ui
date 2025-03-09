@@ -36,20 +36,22 @@
             {{ data.day.split("-").slice(2).join("-") }} 
           </div>
           <div class="courses" v-if="allCourses[data.day]">
-            <div
-              v-for="(course, index) in allCourses[data.day]"
-              :key="index"
-              class="course-item"
-              @click.stop="openScheduleNoteModal(course)"
-            >
-              <el-tag :type="courseStatus(course)" >
-                {{ course.studentName }}
-                 {{ formatTime(course.scheduleTime) }}
-              </el-tag>
-              <div v-if="course.courseNote" class="course-note">
-                {{ course.courseNote }}
+            <el-scrollbar height="100%">
+              <div
+                v-for="(course, index) in allCourses[data.day]"
+                :key="index"
+                class="course-item"
+                @click.stop="openScheduleNoteModal(course)"
+              >
+                <el-tag :type="courseStatus(course)" >
+                  {{ course.studentName }}
+                  {{ formatTime(course.scheduleTime) }}
+                </el-tag>
+                <div v-if="course.courseNote" class="course-note">
+                  {{ course.courseNote }}
+                </div>
               </div>
-            </div>
+            </el-scrollbar>
           </div>
         </div>
       </template>
@@ -163,10 +165,14 @@ loadCourses();
       overflow: hidden;
       // height: 100%;
       .calendar-day {
+        display: flex;
+        align-items: flex-start;
+        flex-direction: column;
         height: 100%;
         padding: 4px;
         box-sizing: border-box;
         .day-number {
+          flex-shrink: 0;
           font-size: 16px;
           text-align: left;
           padding: 2px;
@@ -178,6 +184,9 @@ loadCourses();
           background-color: #e8e8e8;
         }
         .courses {
+          flex: 1;
+          width: 100%;
+          overflow-y: auto;
           .course-item {
             width: 100%;
             margin-bottom: 4px;
