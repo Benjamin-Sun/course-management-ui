@@ -111,7 +111,7 @@
 </template>
 
 <script setup>
-import { ref, reactive } from "vue";
+import { ref, reactive, onMounted } from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
 import axios from "axios";
 import Qs from "qs";
@@ -158,6 +158,17 @@ const searchStudent = async () => {
   try {
     const response = await api.getStudentByName(searchName.value);
     studentList.value = response.data ? [response.data] : [];
+  } catch (error) {
+    ElMessage.error("查询失败");
+    console.error(error);
+  }
+};
+
+//初始化所有学生
+const initStudent = async () => {
+  try {
+    const response = await api.getAllStudents();
+    studentList.value = response.data;
   } catch (error) {
     ElMessage.error("查询失败");
     console.error(error);
@@ -232,6 +243,10 @@ const showCourses = async (studentName) => {
     console.error("Error details:", error);
   }
 };
+
+onMounted(() => {
+  initStudent();
+});
 </script>
 
 <style scoped>

@@ -205,8 +205,6 @@ loadCourses();
       }
     }
     .header-button-right {
-      button {
-      }
       .calendar-control-button {
         button {
           width: 60px;

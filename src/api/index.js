@@ -12,6 +12,10 @@ export default {
     );
   },
 
+  getAllStudents() {
+    return axios.get(`${API_URL}/courseManage/student/getAllStudents`);
+  },
+
   addStudent(data) {
     return axios.post(`${API_URL}/courseManage/student/addStudent`, data);
   },
@@ -24,6 +28,11 @@ export default {
 
   getAllCourses(data) {
     return axios.post(`${API_URL}/courseManage/schedule/getAllCoursesByStudentName`, data);
+  },
+
+  removeCourse(courseIdList) {
+    return axios.post(
+      `${API_URL}/courseManage/course/removeCourse`, courseIdList);
   },
 
   addSchedule(data) {

@@ -21,14 +21,15 @@
     <template #footer>
       <div class="schedule-note-modal-footer">
         <el-button @click="modelValue = false">取消</el-button>
-        <el-button type="info" @click="openRescheduleModal()">调课</el-button>
-        <el-button type="warning" @click="updateStatus()">修改上课状态</el-button>
+        <el-button type="warning" @click="removeCourse()">删除此课程</el-button>
+        <el-button type="primary" @click="openRescheduleModal()">调课</el-button>
+        <el-button type="primary" @click="updateStatus()">修改上课状态</el-button>
         <el-button type="primary" @click="submit()">添加记录</el-button>
       </div>
     </template>
   </el-dialog>
 
-  <RescheduleModal ref="rescheduleModal" />
+  <RescheduleModal ref="rescheduleModal" @reschedule-success="handleRescheduleSuccess" />
 </template>
 
 <script setup>
@@ -70,7 +71,8 @@ const submit = async () => {
       courseId: form.value.courseId,
     });
     ElMessage.success("添加成功");
-    emits("submit");
+    modelValue.value = false;
+    emits("submit"); 
   } catch (error) {
     ElMessage.error("添加失败");
     console.error("添加上课记录失败:", error);
@@ -84,16 +86,42 @@ const updateStatus = async () => {
       courseStatus: form.value.courseStatus,
     });
     ElMessage.success("修改成功");
-    emits("updateStatus");
+    modelValue.value = false;
+    emits("submit"); 
   } catch (error) {
     ElMessage.error("修改失败");
     console.error("修改失败:", error);
   }
 };
 
+const removeCourse = () => {
+  ElMessageBox.confirm("确定要删除该课程吗？", "警告", {
+    confirmButtonText: "确定",
+    cancelButtonText: "取消",
+    type: "warning",
+  })
+    .then(async () => {
+      try {
+        await api.removeCourse([form.value.courseId]); 
+        ElMessage.success("删除成功");
+        modelValue.value = false; 
+        emits("submit"); 
+      } catch (error) {
+        ElMessage.error("删除失败");
+        console.error("删除课程失败:", error);
+      }
+    })
+    .catch(() => {});
+};
+
 const rescheduleModal = ref(null);
 const openRescheduleModal = () => {
   rescheduleModal.value.show(form.value);
+};
+
+const handleRescheduleSuccess = () => {
+  modelValue.value = false;
+  emits("submit");
 };
 
 defineExpose({

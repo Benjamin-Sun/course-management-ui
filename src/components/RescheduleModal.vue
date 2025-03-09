@@ -14,7 +14,7 @@
           v-model="newTime"
           type="datetime"
           placeholder="选择日期和时间"
-          format="YYYY-MM-DD HH:mm:ss"
+          format="YYYY-MM-DD HH:mm"
         ></el-date-picker>
       </el-form-item>
       <el-form-item>
@@ -33,6 +33,8 @@ const showModal = ref(false);
 const newTime = ref(null);
 const courseData = ref(null);
 
+const emits = defineEmits(['reschedule-success']);
+
 const show = (data) => {
   showModal.value = true;
   courseData.value = data;
@@ -49,10 +51,11 @@ const rescheduleCourse = async () => {
     await api.reScheduleCourse({
       courseId: courseData.value.courseId,
       // newTime: (new Date(newTime.value)).getTime() // dayjs(newTime.value).format("YYYY-MM-DDTHH:mm:ss") // "YYYY-MM-DD HH:mm:ss"
-      newTime: dayjs(newTime.value).format("YYYY-MM-DD HH:mm:ss")
+      newTime: dayjs(newTime.value).format("YYYY-MM-DD HH:mm")
     });
     ElMessage.success("调课成功");
     closeModal();
+    emits('reschedule-success');
   } catch (error) {
     ElMessage.error("调课失败");
     console.error("调课失败:", error);

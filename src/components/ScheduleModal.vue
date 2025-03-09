@@ -15,7 +15,7 @@
         <el-date-picker
           v-model="form.startTime"
           type="datetime"
-          value-format="YYYY-MM-DDTHH:mm:ss"
+          value-format="YYYY-MM-DDTHH:mm"
           placeholder="选择开始时间"
         />
       </el-form-item>
@@ -80,7 +80,7 @@ const form = reactive({
 watch(
   () => props.startTime,
   (newValue) => {
-    form.startTime = dayjs(newValue).format("YYYY-MM-DDTHH:mm:ss");
+    form.startTime = dayjs(newValue).format("YYYY-MM-DDTHH:mm");
   },
   { immediate: true }
 );
@@ -100,7 +100,7 @@ const generateScheduleTimes = () => {
   let current = dayjs(form.startTime);
 
   for (let i = 0; i < form.totalCourses; i++) {
-    times.push(current.format("YYYY-MM-DDTHH:mm:ss"));
+    times.push(current.format("YYYY-MM-DDTHH:mm"));
 
     switch (form.cycleType) {
       case "daily":
